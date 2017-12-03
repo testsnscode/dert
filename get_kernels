@@ -1,0 +1,53 @@
+#!/bin/sh
+
+# This script gets the SPICE kernels and puts them in a directory called kernels.
+# Run it from the DERT installation directory.
+
+# Edit dert.properties to add or remove kernel files.
+
+plat="`uname -s`"
+dert_path=$0
+
+if test $dert_path = "dert"
+then
+dert_path="`/usr/bin/which dert`"
+fi
+
+dert_path=${dert_path%/*}
+
+if test $plat = "Darwin"
+then
+dest=${dert_path}/dert.app/Contents/Java/kernels
+else
+dest=${dert_path}/kernels
+fi
+
+# Gravitational constant x mass (GM) values
+echo "Retrieving gm_de431.tpc"
+curl https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/gm_de431.tpc > ${dest}/gm_de431.tpc
+
+# Generic orientation data
+echo "Retrieving pck00010.tpc"
+curl https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/pck00010.tpc > ${dest}/pck00010.tpc
+
+# Leapseconds kernel
+echo "Retrieving naif0011.tls"
+curl https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/naif0011.tls > ${dest}/naif0011.tls
+
+# Generic Planet Ephemeris
+echo "Retrieving de430.bsp"
+curl https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de430.bsp > ${dest}/de430.bsp
+
+# Mars Planet Ephemeris
+echo "Retrieving mar097.bsp"
+curl https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/mar097.bsp > ${dest}/mar097.bsp
+
+# Update to de430 for New Horizons
+#echo "Retrieving de432s.bsp"
+#curl https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de432s.bsp > ${dest}/de432s.bsp
+
+# Pluto Planet Ephemeris
+#echo "Retrieving plu055.bsp"
+#curl https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/plu055.bsp > ${dest}/plu055.bsp
+
+chmod o+r ${dest}/*

@@ -1,0 +1,29 @@
+#!/bin/sh
+
+plat="`uname -s`"
+dert_path=$0
+max_mem=2048   # megabytes
+
+if test $dert_path = "dert"
+then
+
+dert_path="`/usr/bin/which dert`"
+
+fi
+
+dert_path=${dert_path%/*}
+
+# Change the Java in your path if needed.
+#PATH=:/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/bin:$PATH
+
+if test $plat = "Darwin"
+then
+
+java -Xms256m -Xmx${max_mem}m -Xdock:icon=${dert_path}/derticon.icns -Xdock:name="DERT" -jar ${dert_path}/dert.app/Contents/Java/dert.jar $*
+
+else
+
+java -Xms256m -Xmx${max_mem}m -jar ${dert_path}/dert.jar $*
+
+fi
+	

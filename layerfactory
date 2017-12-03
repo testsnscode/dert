@@ -1,0 +1,28 @@
+#!/bin/sh
+
+plat="`uname -s`"
+dert_path=$0
+max_mem=8192   # megabytes
+
+if test $dert_path = "layerfactory"
+then
+
+dert_path="`/usr/bin/which layerfactory`"
+
+fi
+
+dert_path=${dert_path%/*}
+
+# Change the Java in your path if needed.
+#PATH=:/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/bin:$PATH
+
+if test $plat = "Darwin"
+then
+
+	java -Xms256m -Xmx${max_mem}m -classpath ${dert_path}/dert.app/Contents/Java/dert.jar:${dert_path}/dert.app/Contents/Java/natives_macosx.jar gov.nasa.arc.dert.landscape.factory.LayerFactory $*
+
+else
+
+	java -Xms256m -Xmx${max_mem}m -classpath ${dert_path}/dert.jar:${dert_path}/lib/natives_linux.jar gov.nasa.arc.dert.landscape.factory.LayerFactory $*
+
+fi
